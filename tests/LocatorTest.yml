@@ -9,6 +9,11 @@ Location:
     Phone: 920-459-8889
     EmailAddress: info@dynamicdoes.com
     ShowInLocator: true
+    Address: 1526 South 12th Street
+    Suburb: Sheboygan
+    State: WI
+    Postcode: 53081
+    Country: US
   silverstripe:
     Title: Silverstripe
     Featured: true
@@ -16,6 +21,10 @@ Location:
     Phone: 555-555-5555
     EmailAddress: solutions@silverstripe.com
     ShowInLocator: true
+    Address: 101-103 Courtenay Place
+    Suburb: Wellington
+    Postcode: 6011
+    Country: NZ
   3sheeps:
     Title: 3 Sheeps Brewing
     Featured: false

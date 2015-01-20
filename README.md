@@ -18,7 +18,7 @@ Git Installation
 
 `git clone git@github.com:dynamic/SilverStripe-Locator-Module.git locator`
 
-`git clone git@github.com:ajshort/silverstripe-addressable.git addressable`
+`git clone git@github.com:silverstripe-australia/silverstripe-addressable.git addressable`
 
 `rm -rf .git` (optional, to remove existing git repo)
 
@@ -26,7 +26,7 @@ Requirements
 =================================
 
  *  SilverStripe 3.1.x
- *  Addressable Module by ajshort for Location geocoding - https://github.com/ajshort/silverstripe-addressable
+ *  Addressable Module by silverstripe-australia for Location geocoding - https://github.com/silverstripe-australia/silverstripe-addressable
  
 Use
 =================================
@@ -44,7 +44,7 @@ Maintainer Contact
 Links
 =================================
 
- * [SilverStripe Addressable](https://github.com/ajshort/silverstripe-addressable) by Andrew Short
+ * [SilverStripe Addressable](https://github.com/silverstripe-australia/silverstripe-addressable) by SilverStripe Australia
  * [jQuery Store Locator Plugin](https://github.com/bjorn2404/jQuery-Store-Locator-Plugin)
  * [SilverStripe CMS](http://www.silverstripe.org/)
 
