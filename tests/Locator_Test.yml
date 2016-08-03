@@ -46,6 +46,7 @@ LocationCategory:
 Locator:
   locator1:
     Title: Locator
+    Categories: =>LocationCategory.service,=>LocationCategory.technology
 Location:
   dynamic:
     Title: Dynamic, Inc.
