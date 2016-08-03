@@ -208,13 +208,14 @@ class Locator_Controller extends Page_Controller
         if ($locations) {
 
             Requirements::javascript('framework/thirdparty/jquery/jquery.js');
-            Requirements::javascript('http://maps.google.com/maps/api/js?key=' . $key);
+            Requirements::javascript('https://maps.google.com/maps/api/js?key=' . $key);
             Requirements::javascript('locator/thirdparty/handlebars/handlebars-v1.3.0.js');
             Requirements::javascript('locator/thirdparty/jquery-store-locator/js/jquery.storelocator.js');
             Requirements::css('locator/css/map.css');
 
             $featuredInList = ($locations->filter('Featured', true)->count() > 0);
             $defaultCoords = $this->getAddressSearchCoords() ? $this->getAddressSearchCoords() : '';
+            $isChrome = (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome') !== FALSE);
 
             $featured = $featuredInList
                 ? 'featuredLocations: true'
@@ -223,7 +224,7 @@ class Locator_Controller extends Page_Controller
             // map config based on user input in Settings tab
             // AutoGeocode or Full Map
             if ($this->data()->AutoGeocode) {
-                $load = $featuredInList || $defaultCoords != ''
+                $load = $featuredInList || $defaultCoords || $isChrome != ''
                     ? 'autoGeocode: false, fullMapStart: true, storeLimit: 1000, maxDistance: true,'
                     : 'autoGeocode: true, fullMapStart: false,';
             } else {
@@ -262,7 +263,6 @@ class Locator_Controller extends Page_Controller
                         slideMap: false,
                         zoomLevel: 0,
                         noForm: true,
-                        formID: 'LocatorForm_LocationSearch',
                         distanceAlert: -1,
                         " . $kilometer . ',
                         ' . $defaultCoords . '
