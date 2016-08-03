@@ -199,61 +199,57 @@ class Locator_Controller extends Page_Controller
     public function init()
     {
         parent::init();
-
         $themeDir = SSViewer::get_theme_folder();
-
         // google maps api key
         $key = Config::inst()->get('GoogleGeocoding', 'google_api_key');
-
         $locations = $this->getLocations();
-
-        Requirements::block('framework/thirdparty/jquery/jquery.js');
-        Requirements::javascript('https://code.jquery.com/jquery-3.0.0.min.js');
+        Requirements::javascript('framework/thirdparty/jquery/jquery.js');
         if ($locations) {
-
-            $featuredInList = ($locations->filter('Featured', true)->count() > 0);
-            $defaultCoords = $this->getAddressSearchCoords() ? $this->getAddressSearchCoords() : '';
-
-            $featured = $featuredInList
-                ? 'featuredLocations: true'
-                : 'featuredLocations: false';
-
-            // map config based on user input in Settings tab
-            // AutoGeocode or Full Map
-            if ($this->data()->AutoGeocode) {
-                $load = $featuredInList || $defaultCoords != ''
-                    ? 'autoGeocode: false, fullMapStart: true, storeLimit: 1000, maxDistance: true,'
-                    : 'autoGeocode: true, fullMapStart: false,';
-            } else {
-                $load = 'autoGeocode: false, fullMapStart: true, storeLimit: 1000, maxDistance: true,';
-            }
-
-            $listTemplatePath = $this->config()->get('list_template_path');
-            $infowindowTemplatePath = $this->config()->get('info_window_template_path');
-
-            // in page or modal
-            $modal = ($this->data()->ModalWindow) ? 'modalWindow: true' : 'modalWindow: false';
-
-            $kilometer = ($this->data()->Unit == 'km') ? 'lengthUnit: "km"' : 'lengthUnit: "m"';
-
-            // pass GET variables to xml action
-            $vars = $this->request->getVars();
-            unset($vars['url']);
-            unset($vars['action_doFilterLocations']);
-            $url = '';
-            if (count($vars)) {
-                $url .= '?' . http_build_query($vars);
-            }
-            $link = $this->Link() . 'xml.xml' . $url;
-
-            Requirements::css('locator/css/map.css');
-            /*Requirements::javascript('locator/thirdparty/jQuery-Store-Locator-Plugin-2.6.2/libs/handlebars/handlebars-v4.0.5.js');
-            Requirements::javascript('locator/thirdparty/jQuery-Store-Locator-Plugin-2.6.2/src/js/jquery.storelocator.js');
-            Requirements::javascript("//maps.google.com/maps/api/js?key={$key}");
-
-            // init map
+            Requirements::javascript('http://maps.google.com/maps/api/js?key=' . $key);
+            Requirements::javascript('locator/thirdparty/handlebars/handlebars-v1.3.0.js');
+            Requirements::javascript('locator/thirdparty/jquery-store-locator/js/jquery.storelocator.js');
+        }
+        Requirements::css('locator/css/map.css');
+        $featuredInList = ($locations->filter('Featured', true)->count() > 0);
+        $featured = $featuredInList
+            ? 'featuredLocations: true'
+            : 'featuredLocations: false';
+        // map config based on user input in Settings tab
+        // AutoGeocode or Full Map
+        if ($this->data()->AutoGeocode) {
+            $load = $featuredInList
+                ? 'autoGeocode: false, fullMapStart: true, storeLimit: 1000, maxDistance: true,'
+                : 'autoGeocode: true, fullMapStart: false,';
+        } else {
+            $load = 'autoGeocode: false, fullMapStart: true, storeLimit: 1000, maxDistance: true,';
+        }
+        /*$load = ($this->data()->AutoGeocode) ?
+            'autoGeocode: true, fullMapStart: false,' :
+            'autoGeocode: false, fullMapStart: true, storeLimit: 1000, maxDistance: true,';*/
+        $base = Director::baseFolder();
+        $themePath = $base . '/' . $themeDir;
+        $listTemplatePath = (file_exists($themePath . '/templates/location-list-description.html')) ?
+            $themeDir . '/templates/location-list-description.html' :
+            'locator/templates/location-list-description.html';
+        $infowindowTemplatePath = (file_exists($themePath . '/templates/infowindow-description.html')) ?
+            $themeDir . '/templates/infowindow-description.html' :
+            'locator/templates/infowindow-description.html';
+        // in page or modal
+        $modal = ($this->data()->ModalWindow) ? 'modalWindow: true' : 'modalWindow: false';
+        $kilometer = ($this->data()->Unit == 'km') ? 'lengthUnit: "km"' : 'lengthUnit: "m"';
+        // pass GET variables to xml action
+        $vars = $this->request->getVars();
+        unset($vars['url']);
+        unset($vars['action_index']);
+        $url = '';
+        if (count($vars)) {
+            $url .= '?' . http_build_query($vars);
+        }
+        $link = $this->Link() . 'xml.xml' . $url;
+        // init map
+        if ($locations) {
             Requirements::customScript("
-                $(function(){
+                $(function($) {
                     $('#map-container').storeLocator({
                         " . $load . "
                         dataLocation: '" . $link . "',
@@ -265,13 +261,14 @@ class Locator_Controller extends Page_Controller
                         slideMap: false,
                         zoomLevel: 0,
                         noForm: true,
-                        formID: 'LocatorForm_LocationSearch',
+                        formID: 'Form_LocationSearch',
+                        inputID: 'Form_LocationSearch_Address',
+                        categoryID: 'Form_LocationSearch_category',
                         distanceAlert: -1,
-                        " . $kilometer . ',
-                        ' . $defaultCoords . '
+                        " . $kilometer . '
                     });
                 });
-            ');*/
+            ');
         }
     }
 
