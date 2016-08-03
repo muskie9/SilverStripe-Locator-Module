@@ -11,9 +11,8 @@ class LocatorTest extends Locator_Test
      */
     public function testGetCMSFields()
     {
-        $object = new Locator();
-        $fieldset = $object->getCMSFields();
-        $this->assertTrue(is_a($fieldset, 'FieldList'));
+        $locator = singleton('Locator');
+        $this->assertInstanceOf('FieldList', $locator->getCMSFields());
     }
 
     /**
@@ -21,12 +20,12 @@ class LocatorTest extends Locator_Test
      */
     public function testLocations()
     {
-        $filter = array('ShowInLocator' => 1);
-        $filterAny = array('Suburb' => 'Sheboygan');
-        $exclude = array('Suburb' => 'Milwaukee');
-        $locations = Locator::locations($filter, $filterAny, $exclude);
+        $filter = Config::inst()->get('Locator_Controller', 'base_filter');
+        $filterAny = Config::inst()->get('Locator_Controller', 'base_filter_any');
+        $exclude = Config::inst()->get('Locator_Controller', 'base_exclude');
+        $locations = Locator::get_locations($filter, $filterAny, $exclude);
         $locations2 = Location::get()->filter($filter)->filterAny($filterAny)->exclude($exclude);
-        $this->assertEquals($locations->Count(), $locations2->Count());
+        $this->assertEquals($locations->count(), $locations2->count());
     }
 
     /**
